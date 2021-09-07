@@ -151,7 +151,7 @@ class gcn_env(object):
 
 
 	def reset(self,train_gnn=False):
-		states = self.init_states[self.train_indexes] #(1272, 64)
+		states = self.init_states[self.train_indexes]
 		self.optimizer.zero_grad()
 		return states
 
@@ -236,10 +236,8 @@ class gcn_env(object):
 				preds = logits.argmax(dim=1)
 				batch_label = torch.LongTensor(self.dataset.data.y[torch.LongTensor(indexes[i_start:i_end])]).to(self.device)
 				correct += int((preds == batch_label).sum())  # Check against ground-truth labels.
-				# logits = self.model(act1, batch_dict[act1], self.data.x, indexes, self.k_hop_sg, self.device)
 			acc = correct / length
 			accs[act1] = acc
-			# acc[a] = preds.eq(labels).sum().item() / len(indexes)
 		return accs
 
 
@@ -271,8 +269,8 @@ class gcn_env(object):
 				logits = self.model(act1, batch_dict[act1][i_start:i_end], self.data.x, indexes[i_start:i_end], self.k_hop_sg, self.device)
 				preds = logits.argmax(dim=1)
 				batch_label = torch.LongTensor(self.dataset.data.y[torch.LongTensor(indexes[i_start:i_end])]).to(self.device)
-				correct += int((preds == batch_label).sum())  # Check against ground-truth labels.
-		acc = correct / test_length  # Derive ratio of correct predictions.
+				correct += int((preds == batch_label).sum())
+		acc = correct / test_length
 		return acc
 
 

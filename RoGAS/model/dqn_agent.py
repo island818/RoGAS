@@ -128,19 +128,14 @@ class QAgent(object):
         torch.cuda.empty_cache()
 
     def learn(self, env, total_timesteps):
-        next_states = env.reset() #(1272, 64)
+        next_states = env.reset()
 
         trajectories = []
         for t in range(total_timesteps):
-            A_1,A_2 = self.predict_batch_new(next_states)       # predict_batch 这可能要更改，因为这个选的太有随机性了，感觉收敛的不是很好
+            A_1,A_2 = self.predict_batch_new(next_states)
             states = next_states
 
             next_states, rewards, dones, debug = env.step((A_1,A_2))
-            # print(next_states.shape) #(1272, 64)
-            # print(len(rewards)) #1272
-            # print(len(dones)) #1272
-            # print(debug) #(0.0840064858490566, 8.400648584905657)
-
             trajectories = zip(states, A_1, A_2, rewards, next_states, dones)
             for ts in trajectories:
                 self.feed(ts)
@@ -163,7 +158,6 @@ class QAgent(object):
         best_action1s = np.argmax(q1_values, axis=-1)
         q2_values = self.width_q_estimator.predict_nograd(states)
         best_action2s = np.argmax(q2_values, axis=-1)
-        # best_action2s = np.ones_like(best_action2s)
         return (best_action1s,best_action2s)
 
 
