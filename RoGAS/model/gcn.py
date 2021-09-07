@@ -52,7 +52,7 @@ class Net(torch.nn.Module):
 			x = F.dropout(F.relu(self.fc1(torch.add(x,x1))), training=self.training)
 			target_feats[i] = self.pool(x, dim=0,keepdim=False)  # [batch_size, hidden_channels]
 
-		# target_feats = self.attention(target_feats.to(device),sub_graph_edge_index.to(device))
+		target_feats = self.attention(target_feats.to(device),sub_graph_edge_index.to(device))
 		target_feats = self.lin(target_feats)
 		return F.log_softmax(target_feats, dim=1)
 
